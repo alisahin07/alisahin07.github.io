@@ -36,70 +36,16 @@
     <p id="result"></p>
 
     <script>
-        // JSON verilerini doğrudan JavaScript içinde tanımlıyoruz
-        const sentences = [
-    {
-        "turkish": "Kitabını çantasına koydu. (to put)",
-        "english": "He put his book in the bag."
-    },
-    {
-        "turkish": "Bilgisayarını kapattı. (to turn off)",
-        "english": "He turned off his computer."
-    },
-    {
-        "turkish": "Kalemini bana verdi. (to give)",
-        "english": "He gave me his pen."
-    },
-    {
-        "turkish": "Anahtarını kaybetti. (to lose)",
-        "english": "He lost his key."
-    },
-    {
-        "turkish": "Onun bisikletini ödünç aldı. (to borrow)",
-        "english": "He borrowed his bike."
-    },
-    {
-        "turkish": "Onun fotoğrafını duvara astı. (to hang)",
-        "english": "He hung his picture on the wall."
-    },
-    {
-        "turkish": "Onun mesajını hemen cevapladı. (to reply)",
-        "english": "He replied to his message immediately."
-    },
-    {
-        "turkish": "Kedisini çok seviyor. (to love)",
-        "english": "He loves his cat very much."
-    },
-    {
-        "turkish": "Onun koltuğuna oturdu. (to sit)",
-        "english": "He sat on his chair."
-    },
-    {
-        "turkish": "Kitabını masada bıraktı. (to leave)",
-        "english": "He left his book on the table."
-    },
-    {
-        "turkish": "Onun saatini buldu. (to find)",
-        "english": "He found his watch."
-    },
-    {
-        "turkish": "Onun çantasını aldı. (to take)",
-        "english": "He took his bag."
-    },
-    {
-        "turkish": "Onun mektubunu yazdı. (to write)",
-        "english": "He wrote his letter."
-    },
-    {
-        "turkish": "Onun paltosunu giydi. (to wear)",
-        "english": "He wore his coat."
-    },
-    {
-        "turkish": "Köpeğini bahçede buldu. (to find)",
-        "english": "He found his dog in the garden."
-    }
-]
+        let sentences = [];
 
+        // JSON verilerini dış dosyadan alıyoruz
+        fetch('sentences.json')
+            .then(response => response.json())
+            .then(data => {
+                sentences = data;
+                findNextSentence(); // İlk cümleyi kontrol et ve göster
+                showSentence(); // Sayfa yüklendiğinde ilk cümleyi göster
+            });
 
         // Doğru bilinen cümlelerin indekslerini localStorage'dan al
         let correctIndexes = JSON.parse(localStorage.getItem('correctIndexes')) || [];
@@ -127,9 +73,6 @@
             document.getElementById("translationInput").value = ""; // Input'u temizle
             document.getElementById("result").innerText = ""; // Sonucu temizle
         }
-
-        findNextSentence(); // İlk cümleyi kontrol et ve göster
-        showSentence(); // Sayfa yüklendiğinde ilk cümleyi göster
 
         // Çeviriyi kontrol eden fonksiyon
         function checkTranslation() {
