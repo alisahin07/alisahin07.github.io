@@ -23,6 +23,17 @@
 </head>
 <body>
     <h1>Türkçe-İngilizce Çeviri</h1>
+
+    <!-- Kullanıcının JSON dosyasını seçmesi için bir dropdown -->
+    <label for="jsonSelector">Bir JSON dosyası seçin:</label>
+    <select id="jsonSelector">
+        <option value="of_ve_s_Iyelik_cumleleri.json">of_ve_s_Iyelik_cumleleri</option>
+        <option value="how,where,cumleleri.json">how,where,cumleleri</option>
+        <option value="sentences2.json">sentences2.json</option>
+        <option value="sentences3.json">sentences3.json</option> <!-- Daha fazla dosya ekleyebilirsin -->
+    </select>
+    <button onclick="loadSelectedJSON()">Yükle</button>
+
     <p id="turkishSentence">Türkçe cümle: </p>
     
     <textarea id="translationInput" rows="4" placeholder="İngilizce çeviriyi buraya yazın"></textarea>
@@ -37,21 +48,27 @@
 
     <script>
         let sentences = [];
-
-        // JSON verilerini dış dosyadan alıyoruz
-        fetch('sentences.json')
-            .then(response => response.json())
-            .then(data => {
-                sentences = data;
-                findNextSentence(); // İlk cümleyi kontrol et ve göster
-                showSentence(); // Sayfa yüklendiğinde ilk cümleyi göster
-            });
-
-        // Doğru bilinen cümlelerin indekslerini localStorage'dan al
         let correctIndexes = JSON.parse(localStorage.getItem('correctIndexes')) || [];
-
-        // Cümle indexi
         let currentIndex = 0;
+
+        // Kullanıcının seçtiği JSON dosyasını yükleme fonksiyonu
+        function loadSelectedJSON() {
+            const selectedFile = document.getElementById('jsonSelector').value;
+
+            fetch(selectedFile)
+                .then(response => response.json())
+                .then(data => {
+                    sentences = data;
+                    correctIndexes = JSON.parse(localStorage.getItem('correctIndexes')) || []; // Doğru bilinen cümleler
+                    currentIndex = 0; // Baştan başla
+                    findNextSentence();
+                    showSentence(); // İlk cümleyi göster
+                    document.getElementById("translationInput").disabled = false; // Textarea'yı aktif et
+                })
+                .catch(error => {
+                    console.error('JSON dosyası yüklenirken hata oluştu:', error);
+                });
+        }
 
         // Doğru bilinen cümleleri atlayarak başla
         function findNextSentence() {
